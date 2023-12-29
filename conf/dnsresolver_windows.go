@@ -93,5 +93,14 @@ func (config *Config) ResolveEndpoints() error {
 			return err
 		}
 	}
+    arr := strings.Split(config.Peers[i].Endpoint.Host, ":")
+    //IP4P address
+    if len(arr) == 5 && strings.Compare(arr[0], "2001") == 0 && strings.Compare(arr[1], "") == 0 {
+        port, _ := hex.DecodeString(arr[2])
+		ip1, _ := hex.DecodeString(arr[3])
+		ip2, _ := hex.DecodeString(arr[4])
+		endpoint.Port = uint16(port[0])<<8 + uint16(port[1])
+		endpoint.Host = fmt.Sprintf("%d.%d.%d.%d", ip1[0],ip1[1],ip2[0],ip2[1])
+	}
 	return nil
 }
